@@ -1,0 +1,76 @@
+class Snake
+  include Celluloid
+  include Celluloid::Notifications
+  include Celluloid::Logger
+  extend Forwardable
+
+  attr_reader :id, :kills, :length, :elements, :direction, :last_movement_direction
+
+  def_delegator :@last_movement_direction, :opposite, :opposite_direction
+
+  def valid_direction?(d)
+    dir = Direction[d]
+    dir && dir != opposite_direction
+  end
+
+  def initialize(options = {})
+    @id = SecureRandom.uuid
+    reset
+  end
+
+  def reset
+    @kills = 0
+    @length = 6
+    @direction = Direction::Right
+    @last_movement_direction = @direction
+    @elements = [Point.new(4,25)]*@length
+  end
+
+  def head
+    @elements[@length - 1]
+  end
+
+  def blocks_self?
+    h = head
+    0.upto(length - 2).any? { |i| h == elements[i] }
+  end
+
+  def blocks?(target)
+    target_head = target.head
+    elements.any? { |el| el == target_head }
+  end
+
+  def add_kill
+    @kills += 1
+    @length += 1
+    @elements.unshift Point.new(-1, -1)
+  end
+
+  def step
+    @last_movement_direction = direction
+    move_head
+    elements.shift #remove tail
+  end
+
+  def move_head
+    new_head = head + direction
+    elements.push( new_head )
+
+    new_head.x = 49 if new_head.x < 0
+    new_head.x = 0 if new_head.x > 49
+
+    new_head.y = 49 if new_head.y < 0
+    new_head.y = 0 if new_head.y > 49
+  end
+
+  def serialize
+    {
+      "id" => id,
+      "deaths" => 0,
+      "length" => length,
+      "elements" => elements.map(&:to_a),
+      "kills" => kills
+    }
+  end
+
+end
