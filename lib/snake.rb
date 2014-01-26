@@ -4,7 +4,8 @@ class Snake
   include Celluloid::Logger
   extend Forwardable
 
-  attr_reader :id, :kills, :length, :elements, :direction, :last_movement_direction
+  attr_accessor :direction
+  attr_reader :id, :length, :elements, :last_movement_direction
 
   def_delegator :@last_movement_direction, :opposite, :opposite_direction
 
@@ -19,11 +20,10 @@ class Snake
   end
 
   def reset
-    @kills = 0
     @length = 6
     @direction = Direction::Right
     @last_movement_direction = @direction
-    @elements = [Point.new(4,25)]*@length
+    @elements = [Point.new(-1,-1)]*@length
   end
 
   def head
@@ -40,10 +40,9 @@ class Snake
     elements.any? { |el| el == target_head }
   end
 
-  def add_kill
-    @kills += 1
-    @length += 1
-    @elements.unshift Point.new(-1, -1)
+  def grow(count=1)
+    @length += count
+    count.times { @elements.unshift Point.new(-1, -1) }
   end
 
   def step
@@ -63,13 +62,15 @@ class Snake
     new_head.y = 0 if new_head.y > 49
   end
 
+  def move_to_point(p)
+    @elements[@length - 1] = p.dup
+  end
+
   def serialize
     {
       "id" => id,
-      "deaths" => 0,
       "length" => length,
-      "elements" => elements.map(&:to_a),
-      "kills" => kills
+      "elements" => elements.map(&:to_a)
     }
   end
 

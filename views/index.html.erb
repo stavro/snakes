@@ -88,8 +88,8 @@
             snake = snakes[_i];
             context.fillStyle = snake.id === id ? 'rgb(170,0,0)' : 'rgb(0,0,0)';
             if (snake.id === id) {
-              $("#kills").html("Kills: " + snake.kills);
-              $("#deaths").html("Deaths: " + snake.deaths);
+              // $("#kills").html("Kills: " + snake.kills);
+              // $("#deaths").html("Deaths: " + snake.deaths);
             }
             _results.push((function() {
               var _j, _len2, _ref, _results2;
@@ -114,7 +114,7 @@
               case 'identify':
                 profile = message.value
                 return id = profile.id;
-              case 'snakes':
+              case 'map':
                 return animate(message.value);
             }
           }
@@ -147,8 +147,8 @@
   <h1>Snake</h1>
 
   <div id="scoreboard">
-    <span id="kills">Kills: 0</span> - 
-    <span id="deaths">Deaths: 0</span>
+<!--     <span id="kills">Kills: 0</span> - 
+    <span id="deaths">Deaths: 0</span> -->
   </div>
 
   <canvas id="stage" width="500" height="500">

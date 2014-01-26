@@ -9,10 +9,12 @@ require 'securerandom'
 
 require_relative 'lib/point'
 require_relative 'lib/direction'
+require_relative 'lib/world'
 require_relative 'lib/snake'
 require_relative 'lib/socket_listener'
 require_relative 'lib/client'
 require_relative 'lib/map'
+require_relative 'lib/tournament'
 
 class WebServer < Reel::Server::HTTP
   include Celluloid::Logger
@@ -20,7 +22,7 @@ class WebServer < Reel::Server::HTTP
   attr_reader :index_page
 
   def initialize(host = "127.0.0.1", port = 1234)
-    info "WebServer starting on #{host}:#{port}"
+    info "[Server] WebServer starting on #{host}:#{port}"
     @index_page = ERB.new(File.read(File.expand_path("../views/index.html.erb", __FILE__)), nil, "-")
     super(host, port, &method(:on_connection))
   end
@@ -28,7 +30,7 @@ class WebServer < Reel::Server::HTTP
   def on_connection(connection)
     while request = connection.request
       if request.websocket?
-        info "Received a WebSocket connection"
+        info "[Server] Received a WebSocket connection"
         connection.detach
         return route_websocket(request.websocket)
       else
@@ -42,7 +44,7 @@ class WebServer < Reel::Server::HTTP
       return render_index(connection)
     end
 
-    info "404 Not Found: #{request.path}"
+    info "[Server] 404 Not Found: #{request.path}"
     connection.respond :not_found, "Not found"
   end
 
@@ -50,7 +52,7 @@ class WebServer < Reel::Server::HTTP
     if socket.url == "/socket"
       Client.new(socket)
     else
-      info "Received invalid WebSocket request for: #{socket.url}"
+      info "[Server] Received invalid WebSocket request for: #{socket.url}"
       socket.close
     end
   end
@@ -61,7 +63,7 @@ class WebServer < Reel::Server::HTTP
   end
 end
 
-Map.supervise_as :map
+World.supervise_as :world
 WebServer.supervise_as :web_server
 
 sleep

@@ -22,12 +22,19 @@ GEM
     celluloid-io (0.15.0)
       celluloid (>= 0.15.0)
       nio4r (>= 0.5.0)
+    coderay (1.0.9)
     hitimes (1.2.1)
     http (0.5.0)
       http_parser.rb
     http_parser.rb (0.6.0)
+    method_source (0.8.2)
     nio4r (1.0.0)
     oj (2.5.4)
+    pry (0.9.12.2)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+    slop (3.4.6)
     timers (2.0.0)
       hitimes
     websocket_parser (0.1.5)
@@ -39,4 +46,5 @@ PLATFORMS
 DEPENDENCIES
   celluloid!
   oj
+  pry
   reel!

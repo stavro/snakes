@@ -8,9 +8,7 @@ class Client < Snake
 
     @socket = socket
     listener = SocketListener.new(Actor.current, socket, :on_message)
-
-    subscribe('update_snake_positions', :update_snake_positions)
-    async.publish('new_client', Actor.current)
+    async.publish('tournament_request', Actor.current)
     async.identify
     super
   end
@@ -25,8 +23,8 @@ class Client < Snake
 
     case message["type"]
     when "direction"
-      direction = message["value"]
-      @direction = Direction[direction] if valid_direction?(direction)
+      dir = message["value"]
+      @direction = Direction[dir] if valid_direction?(dir)
     end
   end
 
@@ -34,8 +32,8 @@ class Client < Snake
     transmit Oj.dump({ 'type' => 'identify', 'value' => { 'id' => id } })
   end
 
-  def update_snake_positions(topic, snakes)
-    transmit Oj.dump({ 'type' => 'snakes', 'value' => snakes })
+  def update_map(map)
+    transmit Oj.dump({ 'type' => 'map', 'value' => map })
   end
 
   def transmit(msg)

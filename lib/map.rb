@@ -5,49 +5,75 @@ class Map
 
   trap_exit :actor_died
 
-  STAGE_HEIGHT = 49
-  STAGE_WIDTH  = 49
+  attr_reader :id, :clients, :max_clients, :timer
 
-  attr_reader :clients
+  def handle_killed(s); end;
 
-  def initialize
-    subscribe('new_client', :new_client)
+  def initialize(options={})
+    @id = Celluloid.uuid
+    @max_clients = options[:max_clients] || 2
+    @parent = options[:parent]
     @clients = []
-    super
-
-    async.run
   end
 
-  def new_client(topic, actor)
-    info "Adding client..."
+  def client_count
+    clients.count
+  end
+
+  def filled?
+    client_count >= @max_clients
+  end
+
+  def add_client(actor)
+    info "#{self} Adding new client."
     @clients << actor
     link actor
   end
+  alias_method :<<, :add_client
 
   def actor_died(actor, reason)
-    info "Actor died"
+    info "#{self} Actor died"
     @clients.delete(actor)
+    if @clients.empty?
+      info "#{self} No more clients. Terminating Map."
+      terminate
+    end
   end
 
+  #todo: fix nested loops
   def check_collisions
     killed = @clients.select do |client|
       client.blocks_self? ||
       @clients.any? do |c|
-        c != client && c.blocks?(client) && c.add_kill
+        c != client && c.blocks?(client) && c.grow
       end
     end
 
-    killed.each { |c| c.async.reset }
+    killed.each { |s| handle_kill(s) }
+  end
+
+  def setup_placements
+    @clients[0].move_to_point Point.new(4,24)
+    @clients[0].direction = Direction::Right
+    @clients[1].move_to_point Point.new(45,24)
+    @clients[1].direction = Direction::Left
   end
 
   def run
-    every(0.05) do
+    setup_placements
+
+    every(0.1) do
       futures = @clients.map { |c| c.future.step }
       futures.map &:value
 
       check_collisions
 
-      publish('update_snake_positions', @clients.map(&:serialize) )
+      positions = @clients.map(&:serialize)
+      @clients.each { |c| c.async.update_map(positions) }
     end
+  end
+
+  def to_s
+    "[#{self.class.name} #{id}]"
   end
 end

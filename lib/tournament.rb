@@ -1,36 +1,34 @@
-class Tournament
-  include Celluloid
+class Tournament < Map
   extend Forwardable
 
-  class Machine
+  attr_reader :machine, :timer
+
+  class TournamentMachine
     include Celluloid::FSM
-    default_state :waiting_for_participants
 
-    state :waiting_for_participants, to: [:countdown] do
+    default_state :waiting
 
+    state :waiting, :to => :running
+    state :running, :to => :game_over do
+      actor.async.run
     end
-
-    state :countdown,                to: [:game_over, :waiting_for_participants]
-    state :game_over
   end
 
-  attr_reader :machine, :map
-
-  def_delegator :machine, :state
   def_delegator :machine, :transition
-
+  def_delegator :machine, :state
 
   def initialize(options={})
-    @machine = Machine.new
-    @map = Map.new
+    @machine = TournamentMachine.new
+    super options
   end
 
-  def add_client(client)
-
+  def start
+    transition(:running)
   end
 
-  def enough_participants?
-    true
+  def handle_killed(client)
+    timer.cancel
+    terminate
   end
 
 end
