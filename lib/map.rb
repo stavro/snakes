@@ -16,12 +16,8 @@ class Map
     @clients = []
   end
 
-  def client_count
-    clients.count
-  end
-
   def filled?
-    client_count >= @max_clients
+    clients.count >= @max_clients
   end
 
   def add_client(actor)

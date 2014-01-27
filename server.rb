@@ -16,12 +16,15 @@ require_relative 'lib/client'
 require_relative 'lib/map'
 require_relative 'lib/tournament'
 
-class WebServer < Reel::Server::HTTP
+class WebServer < Reel::Server
   include Celluloid::Logger
 
   attr_reader :index_page
 
-  def initialize(host = "127.0.0.1", port = 1234)
+  def initialize
+    host = ARGV[ARGV.find_index('-h') + 1] rescue "127.0.0.1"
+    port = ARGV[ARGV.find_index('-p') + 1] rescue 1234
+
     info "[Server] WebServer starting on #{host}:#{port}"
     @index_page = ERB.new(File.read(File.expand_path("../views/index.html.erb", __FILE__)), nil, "-")
     super(host, port, &method(:on_connection))

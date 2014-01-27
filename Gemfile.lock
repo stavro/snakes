@@ -1,29 +1,12 @@
-GIT
-  remote: git://github.com/celluloid/celluloid.git
-  revision: cc0c59dad727f2dd71868834f53db09d13525e91
-  specs:
-    celluloid (0.16.0.pre)
-      timers (~> 2.0.0)
-
-GIT
-  remote: git://github.com/celluloid/reel.git
-  revision: 09d6c0d7c99238ca88d3479803c8cf1bc49d722e
-  specs:
-    reel (0.5.0.pre)
-      celluloid (>= 0.15.1)
-      celluloid-io (>= 0.15.0)
-      http (>= 0.5.0)
-      http_parser.rb (>= 0.6.0)
-      websocket_parser (>= 0.1.4)
-
 GEM
   remote: https://rubygems.org/
   specs:
+    celluloid (0.15.2)
+      timers (~> 1.1.0)
     celluloid-io (0.15.0)
       celluloid (>= 0.15.0)
       nio4r (>= 0.5.0)
     coderay (1.0.9)
-    hitimes (1.2.1)
     http (0.5.0)
       http_parser.rb
     http_parser.rb (0.6.0)
@@ -34,9 +17,14 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
+    reel (0.4.0)
+      celluloid (>= 0.15.1)
+      celluloid-io (>= 0.15.0)
+      http (>= 0.5.0)
+      http_parser.rb (>= 0.6.0.beta.2)
+      websocket_parser (>= 0.1.4)
     slop (3.4.6)
-    timers (2.0.0)
-      hitimes
+    timers (1.1.0)
     websocket_parser (0.1.5)
       http
 
@@ -44,7 +32,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  celluloid!
+  celluloid (~> 0.15.2)
   oj
   pry
-  reel!
+  reel (~> 0.4.0)
