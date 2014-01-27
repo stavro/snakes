@@ -26,9 +26,9 @@ class Tournament < Map
     transition(:running)
   end
 
-  def handle_killed(client)
-    timer.cancel
-    terminate
+  def handle_death(victim, killer=nil)
+    killer.grow if killer
+    setup_placements
   end
 
 end

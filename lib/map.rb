@@ -7,7 +7,7 @@ class Map
 
   attr_reader :id, :clients, :max_clients, :timer
 
-  def handle_killed(s); end;
+  def handle_death(victim, killer=nil); end;
 
   def initialize(options={})
     @id = Celluloid.uuid
@@ -39,13 +39,13 @@ class Map
   #todo: fix nested loops
   def check_collisions
     killed = @clients.select do |client|
-      client.blocks_self? ||
-      @clients.any? do |c|
-        c != client && c.blocks?(client) && c.grow
+
+      if client.blocks_self?
+        async.handle_death client
+      elsif (killer = @clients.detect { |c| c != client && c.blocks?(client) })
+        async.handle_death client, killer
       end
     end
-
-    killed.each { |s| handle_kill(s) }
   end
 
   def setup_placements

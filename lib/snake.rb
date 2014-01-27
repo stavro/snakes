@@ -62,8 +62,12 @@ class Snake
     new_head.y = 0 if new_head.y > 49
   end
 
-  def move_to_point(p)
-    @elements[@length - 1] = p.dup
+  def move_to_point(p, head_only=false)
+    if head_only
+      @elements[@length - 1] = p.dup
+    else
+      @elements = [p.dup]*@length
+    end
   end
 
   def serialize
