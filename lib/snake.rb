@@ -72,6 +72,7 @@ class Snake
 
   def serialize
     {
+      "type" => "snake",
       "id" => id,
       "length" => length,
       "elements" => elements.map(&:to_a)

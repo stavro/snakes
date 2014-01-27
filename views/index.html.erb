@@ -75,7 +75,7 @@
             }));
           }
         };
-        animate = function(snakes) {
+        animate = function(objects) {
           var element, snake, x, y, _i, _len, _results;
           context.fillStyle = 'rgb(230,230,230)';
           for (x = 0; x <= 49; x++) {
@@ -84,16 +84,23 @@
             }
           }
           _results = [];
-          for (_i = 0, _len = snakes.length; _i < _len; _i++) {
-            snake = snakes[_i];
-            context.fillStyle = snake.id === id ? 'rgb(170,0,0)' : 'rgb(0,0,0)';
-            if (snake.id === id) {
-              // $("#kills").html("Kills: " + snake.kills);
-              // $("#deaths").html("Deaths: " + snake.deaths);
+          for (_i = 0, _len = objects.length; _i < _len; _i++) {
+            obj = objects[_i];
+
+            if (obj.type == "snake") {
+              context.fillStyle = obj.id === id ? 'rgb(170,0,0)' : 'rgb(0,0,0)';
+            } else if (obj.type == "food") { 
+              context.fillStyle = 'rgb(0,170,0)';
             }
+            
+            if (obj.id === id) {
+              // $("#kills").html("Kills: " + obj.kills);
+              // $("#deaths").html("Deaths: " + obj.deaths);
+            }
+            
             _results.push((function() {
               var _j, _len2, _ref, _results2;
-              _ref = snake.elements;
+              _ref = obj.elements;
               _results2 = [];
               for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
                 element = _ref[_j];

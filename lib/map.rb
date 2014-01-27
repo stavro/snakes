@@ -5,7 +5,7 @@ class Map
 
   trap_exit :actor_died
 
-  attr_reader :id, :clients, :max_clients, :timer
+  attr_reader :id, :clients, :max_clients, :timer, :foods
 
   def handle_death(victim, killer=nil); end;
 
@@ -14,6 +14,9 @@ class Map
     @max_clients = options[:max_clients] || 2
     @parent = options[:parent]
     @clients = []
+    @foods = []
+
+    @foods << Point.new(1,1)
   end
 
   def filled?
@@ -44,6 +47,10 @@ class Map
         async.handle_death client
       elsif (killer = @clients.detect { |c| c != client && c.blocks?(client) })
         async.handle_death client, killer
+      elsif (food = foods.detect { |f| f == client.head } )
+        foods.delete(food)
+        client.grow rand(3..5)
+        after(3) { foods << Point.new(rand(49), rand(49)) }
       end
     end
   end
@@ -64,7 +71,7 @@ class Map
 
       check_collisions
 
-      positions = @clients.map(&:serialize)
+      positions = @clients.map(&:serialize) + @foods.map { |f| { 'type' => 'food', 'elements' => [f.to_a] } }
       @clients.each { |c| c.async.update_map(positions) }
     end
   end
