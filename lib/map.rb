@@ -49,7 +49,7 @@ class Map
         async.handle_death client, killer
       elsif (food = foods.detect { |f| f == client.head } )
         foods.delete(food)
-        client.grow rand(3..5)
+        client.grow rand(2..8)
         after(3) { foods << Point.new(rand(49), rand(49)) }
       end
     end
