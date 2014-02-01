@@ -1,1 +1,1 @@
-web: cd game_server; bundle exec jruby server.rb -p $PORT -h 0.0.0.0
+web: ruby game_server/server.rb -p $PORT -h 0.0.0.0

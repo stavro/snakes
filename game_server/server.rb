@@ -25,7 +25,7 @@ def environment
   ENV["REEL_ENV"].to_sym
 end
 
-Mongoid.load!('../shared/mongoid.yml', environment)
+Mongoid.load!(File.join(File.dirname(__FILE__), '../shared/mongoid.yml'), environment)
 require_relative "../shared/models/user"
 require_relative 'lib/models/user'
 

@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '1.9.3'
+ruby '1.9.3', :engine => 'jruby', :engine_version => '1.7.4'
 
 gem 'celluloid', '~> 0.15.2'
 gem 'mongoid', github: 'mongoid/mongoid'
@@ -7,8 +7,3 @@ gem 'reel', '~> 0.4.0'
 gem "multi_json", "~> 1.8.4"
 gem 'pry'
 gem 'encryptor'
-
-# group :development, :test do
-#   gem 'dotenv-rails'
-#   gem 'pry'
-# end
