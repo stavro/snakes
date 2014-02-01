@@ -23,12 +23,16 @@ class Tournament < Map
   end
 
   def start
+    @clients.each { |c| c.broadcast_participants(@clients) }
     transition(:running)
   end
 
   def handle_death(victim, killer=nil)
-    killer.grow if killer
-    setup_placements
+    remaining = @clients - [victim]
+
+    if remaining.count == 1
+      terminate
+    end
   end
 
 end

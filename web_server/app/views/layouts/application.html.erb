@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SnakeSnack</title>
+  <%= stylesheet_link_tag    "application", media: "all"%>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+  <%= user_id_tag %>
+  <%= user_id_hash_tag %>
+</head>
+<body>
+
+<%= yield %>
+
+</body>
+</html>

@@ -9,6 +9,9 @@
 /test/version_tmp/
 /tmp/
 
+/web_server/tmp/
+/web_server/log/*.log
+
 ## Documentation cache and generated files:
 /.yardoc/
 /_yardoc/

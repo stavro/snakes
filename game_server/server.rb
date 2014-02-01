@@ -2,10 +2,14 @@ require 'rubygems'
 require 'bundler/setup'
 require 'reel'
 require 'erb'
+require 'multi_json'
+require 'mongoid'
 require 'celluloid/autostart'
-require 'oj'
 require 'forwardable'
 require 'securerandom'
+require 'encryptor'
+require 'mongoid'
+require 'pry'
 
 require_relative 'lib/point'
 require_relative 'lib/direction'
@@ -16,17 +20,23 @@ require_relative 'lib/client'
 require_relative 'lib/map'
 require_relative 'lib/tournament'
 
+def environment
+  ENV["REEL_ENV"] ||= 'development'
+  ENV["REEL_ENV"].to_sym
+end
+
+Mongoid.load!('../shared/mongoid.yml', environment)
+require_relative "../shared/models/user"
+require_relative 'lib/models/user'
+
 class WebServer < Reel::Server
   include Celluloid::Logger
-
-  attr_reader :index_page
 
   def initialize
     host = ARGV[ARGV.find_index('-h') + 1] rescue "127.0.0.1"
     port = ARGV[ARGV.find_index('-p') + 1] rescue 1234
 
     info "[Server] WebServer starting on #{host}:#{port}"
-    @index_page = ERB.new(File.read(File.expand_path("../views/index.html.erb", __FILE__)), nil, "-")
     super(host, port, &method(:on_connection))
   end
 
@@ -43,10 +53,6 @@ class WebServer < Reel::Server
   end
 
   def route_request(connection, request)
-    if request.url == "/"
-      return render_index(connection)
-    end
-
     info "[Server] 404 Not Found: #{request.path}"
     connection.respond :not_found, "Not found"
   end
@@ -60,13 +66,47 @@ class WebServer < Reel::Server
     end
   end
 
-  def render_index(connection)
-    info "200 OK: /"
-    connection.respond :ok, index_page.result(binding)
+  class << self
+    def set(option, value, ignore_setter = false, &block)
+      value, not_set = block, false if block
+
+      if not_set
+        raise ArgumentError unless option.respond_to?(:each)
+        option.each { |k,v| set(k, v) }
+        return self
+      end
+
+      if respond_to?("#{option}=") and not ignore_setter
+        return __send__("#{option}=", value)
+      end
+
+      setter = proc { |val| set option, val, true }
+      getter = proc { value }
+
+      case value
+      when Proc
+        getter = value
+      when Symbol, Fixnum, FalseClass, TrueClass, NilClass
+        getter = value.inspect
+      when Hash
+        setter = proc do |val|
+          val = value.merge val if Hash === val
+          set option, val, true
+        end
+      end
+
+      define_singleton("#{option}=", setter) if setter
+      define_singleton(option, getter) if getter
+      define_singleton("#{option}?", "!!#{option}") unless method_defined? "#{option}?"
+      self
+    end
   end
 end
 
+#Aws.config = { access_key_id: ENV["AWS_ACCESS_KEY"], secret_access_key: ENV["AWS_ACCESS_SECRET"], region: 'us-west-1' }
+
 World.supervise_as :world
 WebServer.supervise_as :web_server
+#Celluloid::Actor[:data_store] = DynamoDb.pool
 
 sleep

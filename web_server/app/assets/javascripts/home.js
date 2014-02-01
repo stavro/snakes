@@ -1,72 +1,18 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>MMO Snake</title>
-  <style>
-    body {
-      background-color: #fff;
-      font-family: 'Trebuchet MS', 'Helvetica Neue', Arial, Sans-serif;
-      color: #222;
-    }
-
-    h1 {
-      font-weight: bold;  
-      padding: 10px;
-      padding-bottom: 0px;
-      margin-bottom: 2px;
-      text-align: center;
-      font-size: 32px;
-    }
-
-    a, a:active, a:visited {
-      color: #222;
-    }
-
-    a:hover {
-      color: #a00;
-    }
-
-    #ribbon {
-      position: absolute;
-      top: 0;
-      right: 0;
-      border: 0;
-    }
-
-    #scoreboard {
-      text-align: center;
-      padding: 0;
-      padding-bottom: 12px;
-    }
-
-    #stage {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    p {
-      text-align: center;
-      font-weight: normal;
-      font-size: 11px;
-    }
-  </style>
-</head>
-
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script>
-  (function() {
+(function() {
     var SocketKlass = "MozWebSocket" in window ? MozWebSocket : WebSocket;
 
     if (SocketKlass) {
       $(document).ready(function() {
-
         var animate, canvas, connect, context, id, sendDirection, server;
         server = null;
         canvas = $("#stage");
+
+        if (!canvas) {
+          return;
+        }
+
         context = canvas.get(0).getContext("2d");
-        id = null;
+        id = $('meta[name=user_id]').attr("content");
         sendDirection = function(direction) {
           if (server) {
             return server.send(JSON.stringify({
@@ -114,15 +60,32 @@
           return _results;
         };
         connect = function() {
-          server = new SocketKlass('ws://' + window.location.host + '/socket');
+          server = new SocketKlass('ws://' + 'localhost:1234' + '/socket');
+          server.onopen = function() {
+            server.send(JSON.stringify({
+              'type': 'identify',
+              'value': $('meta[name=user_id_hash]').attr("content")
+            }));
+          };
+
           return server.onmessage = function(event){
             message = JSON.parse(event.data);
-            switch (message.type) { 
-              case 'identify':
-                profile = message.value
-                return id = profile.id;
+            switch (message.type) {
+              case 'participants':
+                var scoreboard = $('#scoreboard');
+                for (_i = 0, _len = message.value.length; _i < _len; _i++) {
+                  var div = $('<div>');
+                  var user = message.value[_i];
+                  var avatar = $('<img>').attr('src', user.image_url);
+                  var name = user.first_name;
+                  div.append(avatar);
+                  div.append(name);
+                  scoreboard.append(div);
+                }
               case 'map':
                 return animate(message.value);
+              case 'winner':
+                return alert("Game over!");
             }
           }
         };
@@ -148,18 +111,3 @@
       alert("Your browser does not support websockets.");
     }
   }).call(this);
-
-</script>
-<body>
-  <h1>Snakesnack</h1>
-
-  <div id="scoreboard">
-<!--     <span id="kills">Kills: 0</span> - 
-    <span id="deaths">Deaths: 0</span> -->
-  </div>
-
-  <canvas id="stage" width="500" height="500">
-    Canvas not supported.
-  </canvas>
-</body>
-</html> 

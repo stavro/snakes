@@ -1,0 +1,15 @@
+<% if current_user %>
+
+<h1>Snakesnack</h1>
+
+<div>
+  <div id="scoreboard">
+  </div>
+  <canvas id="stage" width="500" height="500">
+    Canvas not supported.
+  </canvas>
+</div>
+
+<% else %>
+  <%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %>
+<% end %>
