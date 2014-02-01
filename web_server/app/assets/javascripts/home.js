@@ -78,7 +78,7 @@
                   var div = $('<div>');
                   var user = message.value[_i];
                   var avatar = $('<img>').attr('src', user.image_url);
-                  var name = user.first_name;
+                  var name = user.first_name + ('('+user.wins + ' wins / ' + user.losses + ' losses)');
                   div.append(avatar);
                   div.append(name);
                   scoreboard.append(div);
@@ -86,7 +86,7 @@
               case 'map':
                 return animate(message.value);
               case 'winner':
-                return alert("Game over!");
+                return alert(message.value);
             }
           }
         };

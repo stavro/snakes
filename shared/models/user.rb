@@ -22,6 +22,8 @@ module Shared
     field :image_url, type:String
     field :rank, type:Integer
     field :location, type:String
+    field :wins, type:Integer, default: 0
+    field :losses, type:Integer, default: 0
 
     def user_id_hash
       Base64.encode64(Encryptor.encrypt(id.to_s, :key => ENV['ENCRYPTION_SECRET_KEY'])).chomp

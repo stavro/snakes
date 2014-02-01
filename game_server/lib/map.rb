@@ -46,7 +46,13 @@ class Map
       if client.blocks_self?
         async.handle_death client
       elsif (killer = @clients.detect { |c| c != client && c.blocks?(client) })
-        async.handle_death client, killer
+
+        if client.head == killer.head
+          async.handle_tie client, killer
+        else
+          async.handle_death client, killer
+        end
+
       elsif (food = foods.detect { |f| f == client.head } )
         foods.delete(food)
         client.grow rand(2..8)

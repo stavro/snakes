@@ -1,5 +1,5 @@
 class Client < Snake
-  attr_reader :socket, :id, :first_name, :last_name, :image_url
+  attr_reader :socket, :id, :first_name, :last_name, :image_url, :wins, :losses
 
   trap_exit :actor_died
 
@@ -27,6 +27,8 @@ class Client < Snake
       @first_name = user.first_name
       @last_name = user.last_name
       @image_url = user.image_url
+      @wins = user.wins
+      @losses = user.losses
       async.publish('tournament_request', Actor.current)
     when "direction"
       dir = message["value"]
@@ -43,7 +45,9 @@ class Client < Snake
       id: id,
       first_name: first_name,
       last_name: last_name,
-      image_url: image_url
+      image_url: image_url,
+      wins: wins,
+      losses: losses
     }
   end
 
@@ -51,8 +55,24 @@ class Client < Snake
     transmit MultiJson.dump({ 'type' => 'map', 'value' => map })
   end
 
+  def broadcast_winner(winner)
+    transmit MultiJson.dump({ 'type' => 'winner', 'value' => winner })
+  end
+
   def broadcast_participants(clients)
     transmit MultiJson.dump({ 'type' => 'participants', 'value' => clients.map(&:browser_hash) })
+  end
+
+  def add_loss
+    user = User.find(@id)
+    user.losses += 1
+    user.save
+  end
+
+  def add_win
+    user = User.find(@id)
+    user.wins += 1
+    user.save
   end
 
   def transmit(msg)

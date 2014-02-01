@@ -27,10 +27,23 @@ class Tournament < Map
     transition(:running)
   end
 
+  def handle_tie(snake1, snake2)
+    @clients.each { |c| c.broadcast_winner('TIE') }
+    terminate
+  end
+
   def handle_death(victim, killer=nil)
     remaining = @clients - [victim]
 
     if remaining.count == 1
+      winner = remaining.first
+      @clients.each { |c| c.broadcast_winner("Winner: #{winner.first_name}") }
+
+      if winner.id != victim.id
+        winner.add_win
+        victim.add_loss
+      end
+      
       terminate
     end
   end
