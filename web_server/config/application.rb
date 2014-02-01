@@ -9,7 +9,6 @@ require "sprockets/railtie"
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
-Dotenv.load
 Mongoid.load!('../shared/mongoid.yml', Rails.env)
 
 require_relative "initializers/devise"

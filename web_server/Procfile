@@ -1,0 +1,1 @@
+web: cd web_server; rails server -p $PORT
