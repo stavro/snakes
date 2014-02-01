@@ -103,10 +103,7 @@ class WebServer < Reel::Server
   end
 end
 
-#Aws.config = { access_key_id: ENV["AWS_ACCESS_KEY"], secret_access_key: ENV["AWS_ACCESS_SECRET"], region: 'us-west-1' }
-
 World.supervise_as :world
 WebServer.supervise_as :web_server
-#Celluloid::Actor[:data_store] = DynamoDb.pool
 
 sleep

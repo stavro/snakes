@@ -60,7 +60,8 @@
           return _results;
         };
         connect = function() {
-          server = new SocketKlass('ws://' + 'localhost:1234' + '/socket');
+          server = new SocketKlass('ws://' + $('meta[name=game_server_host]').attr("content") + '/socket'); 
+
           server.onopen = function() {
             server.send(JSON.stringify({
               'type': 'identify',
