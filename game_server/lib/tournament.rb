@@ -13,7 +13,9 @@ class Tournament < Map
       actor.async.run
     end
 
-    state :game_over
+    state :game_over do
+      actor.timer.cancel
+    end
   end
 
   def_delegator :machine, :transition
@@ -30,8 +32,7 @@ class Tournament < Map
   end
 
   def handle_tie(snake1, snake2)
-    @clients.each { |c| c.broadcast_winner('TIE') }
-    async.terminate
+    @clients.each { |c| c.async.broadcast_winner('TIE') }
     transition(:game_over)
   end
 
@@ -40,7 +41,7 @@ class Tournament < Map
 
     if remaining.count == 1
       winner = remaining.first
-      @clients.each { |c| c.broadcast_winner("Winner: #{winner.first_name}") }
+      @clients.each { |c| c.async.broadcast_winner("Winner: #{winner.first_name}") }
 
       if winner.id != victim.id
         winner.add_win
@@ -48,7 +49,6 @@ class Tournament < Map
       end
       
       transition(:game_over)
-      async.terminate
     end
   end
 

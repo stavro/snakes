@@ -41,18 +41,19 @@ class Map
 
   #todo: fix nested loops
   def check_collisions
-    killed = @clients.select do |client|
+    @clients.each do |client|
 
       if client.blocks_self?
-        async.handle_death client
+        handle_death client
       elsif (killer = @clients.detect { |c| c != client && c.blocks?(client) })
-        
-        if client.head == killer.head
-          async.handle_tie client, killer
-        else
-          async.handle_death client, killer
-        end
 
+        if client.head == killer.head
+          handle_tie client, killer
+        else
+          handle_death client, killer
+        end
+        
+        break
       elsif (food = foods.detect { |f| f == client.head } )
         foods.delete(food)
         client.grow rand(2..8)
@@ -71,12 +72,12 @@ class Map
   def run
     setup_placements
 
-    every(0.1) do
+    @timer = every(0.1) do
       futures = @clients.map { |c| c.future.step }
       futures.map &:value
 
       check_collisions
-      
+
       positions = @clients.map(&:serialize) + @foods.map { |f| { 'type' => 'food', 'elements' => [f.to_a] } }
       @clients.each { |c| c.async.update_map(positions) }
     end
