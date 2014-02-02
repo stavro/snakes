@@ -15,8 +15,6 @@ class Map
     @parent = options[:parent]
     @clients = []
     @foods = []
-
-    @foods << Point.new(1,1)
   end
 
   def filled?
@@ -67,6 +65,7 @@ class Map
     @clients[0].direction = Direction::Right
     @clients[1].move_to_point Point.new(45,24)
     @clients[1].direction = Direction::Left
+    @foods << Point.new(rand(49),rand(49))
   end
 
   def run
