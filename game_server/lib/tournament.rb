@@ -12,6 +12,8 @@ class Tournament < Map
     state :running, :to => :game_over do
       actor.async.run
     end
+
+    state :game_over
   end
 
   def_delegator :machine, :transition
@@ -29,7 +31,8 @@ class Tournament < Map
 
   def handle_tie(snake1, snake2)
     @clients.each { |c| c.broadcast_winner('TIE') }
-    terminate
+    async.terminate
+    transition(:game_over)
   end
 
   def handle_death(victim, killer=nil)
@@ -44,7 +47,8 @@ class Tournament < Map
         victim.add_loss
       end
       
-      terminate
+      transition(:game_over)
+      async.terminate
     end
   end
 

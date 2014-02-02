@@ -46,7 +46,7 @@ class Map
       if client.blocks_self?
         async.handle_death client
       elsif (killer = @clients.detect { |c| c != client && c.blocks?(client) })
-
+        
         if client.head == killer.head
           async.handle_tie client, killer
         else
@@ -76,7 +76,7 @@ class Map
       futures.map &:value
 
       check_collisions
-
+      
       positions = @clients.map(&:serialize) + @foods.map { |f| { 'type' => 'food', 'elements' => [f.to_a] } }
       @clients.each { |c| c.async.update_map(positions) }
     end

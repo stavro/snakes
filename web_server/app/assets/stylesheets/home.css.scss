@@ -13,7 +13,6 @@
       padding: 10px;
       padding-bottom: 0px;
       margin-bottom: 2px;
-      text-align: center;
       font-size: 32px;
     }
 
@@ -33,9 +32,15 @@
     }
 
     #scoreboard {
+      width: 300px;
+      float: left;
       text-align: center;
       padding: 0;
       padding-bottom: 12px;
+    }
+
+    #scoreboard img {
+      padding-right: 20px;
     }
 
     #stage {
