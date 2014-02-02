@@ -1,2 +1,2 @@
-mmo-snake
+SnakeSnack
 =========
