@@ -24,6 +24,7 @@ class Map
   def add_client(actor)
     info "#{self} Adding new client."
     @clients << actor
+    actor.tournament = Actor.current
     link actor
   end
   alias_method :<<, :add_client

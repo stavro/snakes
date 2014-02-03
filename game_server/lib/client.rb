@@ -1,4 +1,5 @@
 class Client < Snake
+  attr_accessor :tournament
   attr_reader :socket, :id, :first_name, :last_name, :image_url, :wins, :losses
 
   trap_exit :actor_died
@@ -20,6 +21,16 @@ class Client < Snake
     message = MultiJson.load data
     
     case message["type"]
+    when "chat_message"
+      msg = MultiJson.dump({
+        'type' => 'chat_message',
+        'id'   => id,
+        'name' => first_name,
+        'image_url' => image_url,
+        'message' => message["value"]
+      })
+
+      tournament.clients.each { |c| c.transmit(msg) }
     when "identify"
       key = ENV["ENCRYPTION_SECRET_KEY"] || 'secret'
       @id = Encryptor.decrypt(Base64.decode64(message["value"]), :key => key) rescue terminate

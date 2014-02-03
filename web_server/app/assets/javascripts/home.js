@@ -60,6 +60,23 @@
           return _results;
         };
         connect = function() {
+          $('#btn-input').keypress(function (e) {
+            if (e.which == 13) {
+              $('#btn-chat').click();
+            }
+          });
+
+          $('#btn-chat').click(function() {
+            var input = $('#btn-input');
+            var text = input.val();
+            input.val('');
+            server.send(JSON.stringify({
+              'type': 'chat_message',
+              'value': text
+            }));
+
+          })
+
           server = new SocketKlass('ws://' + $('meta[name=game_server_host]').attr("content") + '/socket'); 
 
           server.onopen = function() {
@@ -72,6 +89,10 @@
           return server.onmessage = function(event){
             message = JSON.parse(event.data);
             switch (message.type) {
+              case 'chat_message':
+                var chat_template = '<li class="{{if self}}left{{else}}right{{/if}} clearfix"><span class="chat-img pull-{{if self}}left{{else}}right{{/if}}"><img src="${image_url}" alt="User Avatar" class="img-circle" /></span><div class="chat-body clearfix"><div class="header"><strong class="{{if !self}}pull-right {{/if}}primary-font">${name}</strong></div><p>${message}</p></div></li>';
+                $.tmpl( chat_template, { self: !(id == message.id), image_url: message.image_url, name: message.name, message: message.message }).appendTo( "#chat_box" );
+                break;
               case 'participants':
                 var scoreboard = $('#scoreboard');
                 for (_i = 0, _len = message.value.length; _i < _len; _i++) {
@@ -83,10 +104,13 @@
                   div.append(name);
                   scoreboard.append(div);
                 }
+                break;
               case 'map':
-                return animate(message.value);
+                animate(message.value);
+                break;
               case 'winner':
-                return alert(message.value);
+                alert(message.value);
+                break;
             }
           }
         };
