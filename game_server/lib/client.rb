@@ -32,9 +32,7 @@ class Client < Snake
 
       tournament.clients.each { |c| c.transmit(msg) }
     when "identify"
-      key = ENV["ENCRYPTION_SECRET_KEY"] || 'secret'
-      @id = Encryptor.decrypt(Base64.decode64(message["value"]), :key => key) rescue terminate
-      user = User.find(@id)
+      user = User.from_encrypted_id(message["value"])
       @first_name = user.first_name
       @last_name = user.last_name
       @image_url = user.image_url
