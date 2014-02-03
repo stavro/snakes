@@ -81,7 +81,13 @@
 
           server = new SocketKlass('ws://' + $('meta[name=game_server_host]').attr("content") + '/socket'); 
 
+          server.onclose = function() {
+            $('#btn-input').attr('disabled','disabled');
+          };
+
           server.onopen = function() {
+            $('#btn-input').removeAttr('disabled');
+            
             server.send(JSON.stringify({
               'type': 'identify',
               'value': $('meta[name=user_id_hash]').attr("content")
@@ -92,7 +98,7 @@
             message = JSON.parse(event.data);
             switch (message.type) {
               case 'chat_message':
-                var chat_template = '<li class="{{if self}}left{{else}}right{{/if}} clearfix"><span class="chat-img pull-{{if self}}left{{else}}right{{/if}}"><img src="${image_url}" alt="User Avatar" class="img-circle" /></span><div class="chat-body clearfix"><div class="header"><strong class="{{if !self}}pull-right {{/if}}primary-font">${name}</strong></div><p>${message}</p></div></li>';
+                var chat_template = '<li class="{{if image_url && self}}left{{else image_url}}right{{/if}} clearfix">{{if image_url}}<span class="chat-img pull-{{if self}}left{{else}}right{{/if}}"><img src="${image_url}" alt="User Avatar" class="img-circle" /></span>{{/if}}<div class="chat-body clearfix"><div class="header"><strong class="{{if !self}}pull-right {{/if}}primary-font">${name}</strong></div><p>${message}</p></div></li>';
                 $.tmpl( chat_template, { self: !(id == message.id), image_url: message.image_url, name: message.name, message: message.message }).appendTo( "#chat_box" );
                 var n = $('#chat_box').height();
                 $('.panel-body').animate({ scrollTop: n }, 50);
@@ -111,9 +117,6 @@
                 break;
               case 'map':
                 animate(message.value);
-                break;
-              case 'winner':
-                alert(message.value);
                 break;
             }
           }

@@ -66,8 +66,12 @@ class Client < Snake
     transmit MultiJson.dump({ 'type' => 'map', 'value' => map })
   end
 
+  def broadcast_starting
+    transmit MultiJson.dump({ 'type' => 'chat_message', id: 0, name: 'Server', message: 'A new game will begin in 5 seconds...'})
+  end
+
   def broadcast_winner(winner)
-    transmit MultiJson.dump({ 'type' => 'winner', 'value' => winner })
+    transmit MultiJson.dump({ 'type' => 'chat_message', id: 0, name: 'Server', message: "#{winner} is the winner!"})
   end
 
   def broadcast_participants(clients)
