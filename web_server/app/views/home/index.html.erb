@@ -17,7 +17,7 @@
             </div>
           </div>
 
-<% if current_user %>
+          <% if current_user %>
           <div id="scoreboard" class="col-md-4">
             <%= render partial: 'chat' %>
           </div>
@@ -26,9 +26,9 @@
               Canvas not supported.
             </canvas>
           </div>
-<% else %>
-  <%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %>
-<% end %>
+          <% else %>
+            <%= link_to image_tag('facebook_login.png'), user_omniauth_authorize_path(:facebook) %>
+          <% end %>
 
           <div class="inner cover">
             <!-- <h1 class="cover-heading">Cover your page.</h1>
