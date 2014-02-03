@@ -23,7 +23,7 @@
         };
         animate = function(objects) {
           var element, snake, x, y, _i, _len, _results;
-          context.fillStyle = 'rgb(230,230,230)';
+          context.fillStyle = 'rgb(255,255,255)';
           for (x = 0; x <= 49; x++) {
             for (y = 0; y <= 49; y++) {
               context.fillRect(x * 10, y * 10, 9, 9);
@@ -92,6 +92,8 @@
               case 'chat_message':
                 var chat_template = '<li class="{{if self}}left{{else}}right{{/if}} clearfix"><span class="chat-img pull-{{if self}}left{{else}}right{{/if}}"><img src="${image_url}" alt="User Avatar" class="img-circle" /></span><div class="chat-body clearfix"><div class="header"><strong class="{{if !self}}pull-right {{/if}}primary-font">${name}</strong></div><p>${message}</p></div></li>';
                 $.tmpl( chat_template, { self: !(id == message.id), image_url: message.image_url, name: message.name, message: message.message }).appendTo( "#chat_box" );
+                var n = $('.panel-body').height();
+                $('.panel-body').animate({ scrollTop: n }, 50);
                 break;
               case 'participants':
                 var scoreboard = $('#scoreboard');
