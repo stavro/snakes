@@ -62,10 +62,16 @@ class Map
   end
 
   def setup_placements
-    @clients[0].move_to_point Point.new(4,24)
-    @clients[0].direction = Direction::Right
-    @clients[1].move_to_point Point.new(45,24)
-    @clients[1].direction = Direction::Left
+    if @clients.length > 0
+      @clients[0].move_to_point Point.new(4,24)
+      @clients[0].direction = Direction::Right
+    end
+
+    if @clients.length > 1
+      @clients[1].move_to_point Point.new(45,24)
+      @clients[1].direction = Direction::Left
+    end
+    
     @foods << Point.new(rand(49),rand(49))
   end
 
