@@ -1,9 +1,10 @@
 SnakeSnack::Application.routes.draw do
   root to: "home#index"
+  get '/', to: "home#index", as: "new_user_session"
 
   resources :tournaments, only: [:create]
   
-  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  devise_for :users, :skip => [:sessions, :passwords], :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
