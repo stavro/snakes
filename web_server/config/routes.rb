@@ -4,7 +4,7 @@ SnakeSnack::Application.routes.draw do
 
   resources :tournaments, only: [:create]
   
-  devise_for :users, :skip => [:sessions, :passwords], :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  devise_for :users, :skip => [:registrations, :sessions, :passwords], :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
