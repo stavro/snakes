@@ -68,13 +68,15 @@
 
           $('#btn-chat').click(function() {
             var input = $('#btn-input');
-            var text = input.val();
+            var text = input.val().trim();
             input.val('');
-            server.send(JSON.stringify({
-              'type': 'chat_message',
-              'value': text
-            }));
 
+            if (text.length > 0) {
+              server.send(JSON.stringify({
+                'type': 'chat_message',
+                'value': text
+              }));
+            }
           })
 
           server = new SocketKlass('ws://' + $('meta[name=game_server_host]').attr("content") + '/socket'); 
