@@ -33,6 +33,7 @@ class Client < Snake
       tournament.clients.each { |c| c.transmit(msg) }
     when "identify"
       user = User.from_encrypted_id(message["value"])
+      @id = user.id.to_s
       @first_name = user.first_name
       @last_name = user.last_name
       @image_url = user.image_url
@@ -64,12 +65,8 @@ class Client < Snake
     transmit MultiJson.dump({ 'type' => 'map', 'value' => map })
   end
 
-  def broadcast_starting
-    transmit MultiJson.dump({ 'type' => 'chat_message', id: 0, name: 'Server', message: 'A new game will begin in 5 seconds...'})
-  end
-
-  def broadcast_winner(winner)
-    transmit MultiJson.dump({ 'type' => 'chat_message', id: 0, name: 'Server', message: "#{winner} is the winner!"})
+  def server_message(msg)
+    transmit MultiJson.dump({ 'type' => 'chat_message', id: 0, name: 'Server', message: msg})
   end
 
   def broadcast_participants(clients)

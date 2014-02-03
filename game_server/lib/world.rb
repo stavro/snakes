@@ -20,6 +20,8 @@ class World
         @tournaments << @open_tournament
         @open_tournament.async.start
         create_new_tournament
+      else
+        @open_tournament.broadcast_message('Waiting for additional players...')
       end
     end
   end

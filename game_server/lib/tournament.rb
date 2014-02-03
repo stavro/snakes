@@ -28,8 +28,12 @@ class Tournament < Map
 
   def start
     @clients.each { |c| c.broadcast_participants(@clients) }
-    @clients.each { |c| c.broadcast_starting }
+    @clients.each { |c| c.server_message('A new game will begin in 5 seconds...') }
     after(5) { transition(:running) }
+  end
+
+  def broadcast_message(msg)
+    @clients.each { |c| c.async.server_message(msg) }
   end
 
   def handle_tie(snake1, snake2)
@@ -42,7 +46,8 @@ class Tournament < Map
 
     if remaining.count == 1
       winner = remaining.first
-      @clients.each { |c| c.async.broadcast_winner(winner.first_name) }
+      msg = "#{winner.first_name} is the winner!"
+      @clients.each { |c| c.async.server_message(msg) }
 
       if winner.id != victim.id
         winner.add_win
