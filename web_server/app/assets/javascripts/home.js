@@ -92,7 +92,7 @@
               case 'chat_message':
                 var chat_template = '<li class="{{if self}}left{{else}}right{{/if}} clearfix"><span class="chat-img pull-{{if self}}left{{else}}right{{/if}}"><img src="${image_url}" alt="User Avatar" class="img-circle" /></span><div class="chat-body clearfix"><div class="header"><strong class="{{if !self}}pull-right {{/if}}primary-font">${name}</strong></div><p>${message}</p></div></li>';
                 $.tmpl( chat_template, { self: !(id == message.id), image_url: message.image_url, name: message.name, message: message.message }).appendTo( "#chat_box" );
-                var n = $('.panel-body').height();
+                var n = $('#chat_box').height();
                 $('.panel-body').animate({ scrollTop: n }, 50);
                 break;
               case 'participants':
