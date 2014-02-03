@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-SnakeSnack::Application.config.secret_key_base = '33abd27ddb36d9ecd2f12f5924fb77f84a21ef48e001502e327341de12a2b3f6ac8f361b5936e129464eddf0cc23dc084dd09b3acdc25964a54e2d255da796cf'
+SnakeSnack::Application.config.secret_key_base = ENV['COOKIE_SECRET_KEY']
