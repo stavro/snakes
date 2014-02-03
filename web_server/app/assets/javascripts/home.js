@@ -102,8 +102,8 @@
                 for (_i = 0, _len = message.value.length; _i < _len; _i++) {
                   var div = $('<div>');
                   var user = message.value[_i];
-                  var avatar = $('<img>').attr('src', user.image_url);
-                  var name = user.first_name + ('('+user.wins + ' wins / ' + user.losses + ' losses)');
+                  var avatar = $('<img>').attr('src', user.image_url).css('border-radius', '50%');
+                  var name = '<strong>' + user.first_name + ('</strong> ['+user.wins + ' -' + user.losses + ']');
                   div.append(avatar);
                   div.append(name);
                   scoreboard.append(div);
