@@ -1,4 +1,4 @@
-SnakeSnack::Application.routes.draw do
+Snakes::Application.routes.draw do
   root to: "home#index"
   get '/', to: "home#index", as: "new_user_session"
 

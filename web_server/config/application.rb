@@ -14,7 +14,7 @@ Mongoid.load!('../shared/mongoid.yml', Rails.env)
 require_relative "initializers/devise"
 require_relative "../../shared/models/user"
 
-module SnakeSnack
+module Snakes
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
