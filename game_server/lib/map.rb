@@ -56,7 +56,7 @@ class Map
       elsif (food = foods.detect { |f| f == client.head } )
         foods.delete(food)
         client.grow rand(2..8)
-        after(3) { foods << Point.new(rand(49), rand(49)) }
+        foods << Point.new(rand(49), rand(49))
       end
     end
   end
@@ -72,6 +72,7 @@ class Map
       @clients[1].direction = Direction::Left
     end
     
+    @foods << Point.new(rand(49),rand(49))
     @foods << Point.new(rand(49),rand(49))
   end
 
