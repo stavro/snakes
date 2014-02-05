@@ -44,7 +44,11 @@ class Tournament < Map
   def handle_death(victim, killer=nil)
     remaining = @clients - [victim]
 
-    if remaining.count == 1
+    if remaining.count <= 0
+      msg = "Hooray! Nobody wins."
+      @clients.each { |c| c.async.server_message(msg) }
+      transition(:game_over)
+    elsif remaining.count == 1
       winner = remaining.first
       msg = "#{winner.first_name} is the winner!"
       @clients.each { |c| c.async.server_message(msg) }
