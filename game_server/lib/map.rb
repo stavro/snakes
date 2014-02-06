@@ -4,6 +4,7 @@ class Map
   include Celluloid::Logger
 
   trap_exit :actor_died
+  exclusive :tick
 
   attr_reader :id, :clients, :max_clients, :timer, :foods
 
@@ -80,16 +81,17 @@ class Map
 
   def run
     setup_placements
+    @timer = every(0.1) { tick }
+  end
 
-    @timer = every(0.1) do
-      futures = @clients.map { |c| c.future.step }
-      futures.map &:value
+  def tick
+    futures = @clients.map { |c| c.future.step }
+    futures.map &:value
 
-      check_collisions
+    check_collisions
 
-      positions = @clients.map(&:serialize) + @foods.map { |f| { 'type' => 'food', 'elements' => [f.to_a] } }
-      @clients.each { |c| c.async.update_map(positions) }
-    end
+    positions = @clients.map(&:serialize) + @foods.map { |f| { 'type' => 'food', 'elements' => [f.to_a] } }
+    @clients.each { |c| c.async.update_map(positions) }
   end
 
   def to_s

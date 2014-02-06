@@ -1,4 +1,8 @@
 class Client < Snake
+  include Celluloid
+  include Celluloid::Notifications
+  include Celluloid::Logger
+  
   attr_accessor :tournament
   attr_reader :socket, :id, :first_name, :last_name, :image_url, :wins, :losses
 

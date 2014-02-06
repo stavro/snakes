@@ -1,7 +1,4 @@
 class Snake
-  include Celluloid
-  include Celluloid::Notifications
-  include Celluloid::Logger
   extend Forwardable
 
   attr_accessor :direction
@@ -53,11 +50,11 @@ class Snake
 
   def step
     @last_movement_direction = direction
-    move_head
+    push_head
     elements.shift #remove tail
   end
 
-  def move_head
+  def push_head
     new_head = head + direction
     elements.push( new_head )
 
