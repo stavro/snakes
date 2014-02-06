@@ -5,18 +5,19 @@ class Snake
   extend Forwardable
 
   attr_accessor :direction
-  attr_reader :id, :length, :elements, :last_movement_direction
+  attr_reader :id, :length, :elements, :last_movement_direction, :apples
 
   def_delegator :@last_movement_direction, :opposite, :opposite_direction
+
+  def initialize(options = {})
+    @id = SecureRandom.uuid
+    @apples = 0
+    reset
+  end
 
   def valid_direction?(d)
     dir = Direction[d]
     dir && dir != opposite_direction
-  end
-
-  def initialize(options = {})
-    @id = SecureRandom.uuid
-    reset
   end
 
   def reset
@@ -28,6 +29,11 @@ class Snake
 
   def head
     @elements[@length - 1]
+  end
+
+  def eat
+    @apples += 1
+    grow rand(2..8)
   end
 
   def blocks_self?
@@ -74,6 +80,7 @@ class Snake
     {
       "type" => "snake",
       "id" => id,
+      "apples" => apples,
       "length" => length,
       "elements" => elements.map(&:to_a)
     }

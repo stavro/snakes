@@ -6,7 +6,6 @@ class Client < Snake
 
   def initialize(socket)
     info "Binding socket to client"
-
     @socket = socket
     listener = SocketListener.new(Actor.current, socket, :on_message)
     super
@@ -56,6 +55,7 @@ class Client < Snake
       first_name: first_name,
       last_name: last_name,
       image_url: image_url,
+      apples: apples,
       wins: wins,
       losses: losses
     }
@@ -90,6 +90,10 @@ class Client < Snake
   rescue Reel::SocketError
     info "Time client disconnected"
     terminate
+  end
+
+  def to_s
+    "#{first_name} (#{wins} - #{losses})"
   end
 
 end

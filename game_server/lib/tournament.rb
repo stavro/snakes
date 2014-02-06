@@ -27,8 +27,11 @@ class Tournament < Map
   end
 
   def start
+    names = @clients.map(&:to_s).join(' vs ')
+
+    @clients.each { |c| c.server_message("#{names}: Starting in 5 seconds...") }
     @clients.each { |c| c.broadcast_participants(@clients) }
-    @clients.each { |c| c.server_message('A new game will begin in 5 seconds...') }
+
     after(5) { transition(:running) }
   end
 

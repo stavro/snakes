@@ -105,11 +105,13 @@
                 break;
               case 'participants':
                 var scoreboard = $('#scoreboard');
+                scoreboard.empty();
+
                 for (_i = 0, _len = message.value.length; _i < _len; _i++) {
                   var div = $('<div>');
                   var user = message.value[_i];
                   var avatar = $('<img>').attr('src', user.image_url).css('border-radius', '50%');
-                  var name = '<strong>' + user.first_name + ('</strong> ['+user.wins + ' -' + user.losses + ']');
+                  var name = '<strong>' + user.first_name + ('</strong>: ' + user.apples);
                   div.append(avatar);
                   div.append(name);
                   scoreboard.append(div);

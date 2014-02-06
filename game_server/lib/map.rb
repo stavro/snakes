@@ -32,6 +32,7 @@ class Map
   def actor_died(actor, reason)
     info "#{self} Actor died"
     @clients.delete(actor)
+
     if @clients.empty?
       info "#{self} No more clients. Terminating Map."
       terminate
@@ -55,8 +56,9 @@ class Map
         break
       elsif (food = foods.detect { |f| f == client.head } )
         foods.delete(food)
-        client.grow rand(2..8)
+        client.eat
         foods << Point.new(rand(49), rand(49))
+        @clients.each { |c| c.broadcast_participants(@clients) }
       end
     end
   end
