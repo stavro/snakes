@@ -81,7 +81,7 @@ class Map
 
   def run
     setup_placements
-    @timer = every(0.1) { tick }
+    @timer = every(0.125) { tick }
   end
 
   def tick
