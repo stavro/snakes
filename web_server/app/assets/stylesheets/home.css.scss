@@ -159,6 +159,15 @@ body {
   }
 }
 
+.hide-small-height {
+  display:none;
+}
+
+@media(min-height:600px) {
+  .hide-small-height {
+    display:inline-block;
+  }
+}
 
 #stage {
   background-color: #F0F8FF;
