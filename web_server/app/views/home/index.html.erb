@@ -11,5 +11,5 @@
 <% else %>
   <%= link_to image_tag('facebook_login.png'), user_omniauth_authorize_path(:facebook) %>
   <br/>
-  <%= link_to "or play as a guest", root_path(guest_mode:true) %>
+  <h3><%= link_to "or play as a guest", root_path(guest_mode:true) %></h3>
 <% end %>
