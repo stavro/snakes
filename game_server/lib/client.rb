@@ -40,7 +40,7 @@ class Client < Snake
         @id = decrypted_id.to_s
         @first_name = "Guest " + decrypted_id.split('-').last[0..4]
         @last_name = ""
-        @image_url = "http://www.gravatar.com/avatar/#{@id}.png?d=identicon&s=50"
+        @image_url = "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(@id)}.png?d=identicon&s=50"
         @wins = 0
         @losses = 0
         @guest = true

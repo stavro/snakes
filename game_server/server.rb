@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'reel'
+require 'digest'
 require 'erb'
 require 'multi_json'
 require 'mongoid'
