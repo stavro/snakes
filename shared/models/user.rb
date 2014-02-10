@@ -29,15 +29,23 @@ module Shared
       ENV["ENCRYPTION_SECRET_KEY"] || 'secret'
     end
 
-    def self.from_encrypted_id(encrypted_id)
+    def self.decrypt_id(encrypted_id)
       encrypted_id = Base64.decode64(encrypted_id)
       id = Encryptor.decrypt(encrypted_id, :key => encryption_key) rescue nil
-      id && User.find(id)
+    end
+
+    def self.from_encrypted_id(encrypted_id)
+      decrypted_id = User.decrypt_id(encrypted_id)
+      decrypted_id && User.find(decrypted_id) rescue nil
+    end
+
+    def self.guest_user_id_hash(guest_id)
+      Base64.encode64(Encryptor.encrypt(guest_id.to_s, :key => ENV['ENCRYPTION_SECRET_KEY'])).chomp
     end
 
     def user_id_hash
       Base64.encode64(Encryptor.encrypt(id.to_s, :key => ENV['ENCRYPTION_SECRET_KEY'])).chomp
     end
-    
+
   end
 end
