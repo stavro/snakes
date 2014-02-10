@@ -4,7 +4,7 @@ class Client < Snake
   include Celluloid::Logger
   
   attr_accessor :tournament
-  attr_reader :socket, :id, :first_name, :last_name, :image_url, :wins, :losses
+  attr_reader :socket, :id, :first_name, :last_name, :image_url, :wins, :losses, :guest
 
   trap_exit :actor_died
 
@@ -35,13 +35,26 @@ class Client < Snake
 
       tournament.clients.each { |c| c.transmit(msg) }
     when "identify"
-      user = User.from_encrypted_id(message["value"])
-      @id = user.id.to_s
-      @first_name = user.first_name
-      @last_name = user.last_name
-      @image_url = user.image_url
-      @wins = user.wins
-      @losses = user.losses
+      decrypted_id = User.decrypt_id(message["value"])
+      if decrypted_id.start_with?('guest')
+        @id = decrypted_id.to_s
+        @first_name = "Guest " + decrypted_id.split('-').last[0..4]
+        @last_name = ""
+        @image_url = "http://www.gravatar.com/avatar/#{@id}.png?d=identicon&s=50"
+        @wins = 0
+        @losses = 0
+        @guest = true
+      else
+        user = User.find(decrypted_id)
+        @id = user.id.to_s
+        @first_name = user.first_name
+        @last_name = user.last_name
+        @image_url = user.image_url
+        @wins = user.wins
+        @losses = user.losses
+        @guest = false
+      end
+      
       async.publish('tournament_request', Actor.current)
     when "direction"
       dir = message["value"]
@@ -82,15 +95,19 @@ class Client < Snake
   end
 
   def add_loss
-    user = User.find(@id)
-    user.losses += 1
-    user.save
+    if !guest
+      user = User.find(@id)
+      user.losses += 1
+      user.save
+    end
   end
 
   def add_win
-    user = User.find(@id)
-    user.wins += 1
-    user.save
+    if !guest
+      user = User.find(@id)
+      user.wins += 1
+      user.save
+    end
   end
 
   def transmit(msg)
@@ -101,7 +118,9 @@ class Client < Snake
   end
 
   def to_s
-    "#{first_name} (#{wins} - #{losses})"
+    s = first_name
+    s += " (#{wins} - #{losses})" unless guest
+    s
   end
 
 end
