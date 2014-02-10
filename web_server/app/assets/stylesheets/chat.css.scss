@@ -65,3 +65,13 @@
         font-size:55%;
     }
 }
+
+.collapsed-small {
+    display:none;
+}
+
+@media (min-width: 992px) {
+    .collapsed-small { 
+        display: block;
+    }
+}
