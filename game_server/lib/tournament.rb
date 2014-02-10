@@ -39,6 +39,10 @@ class Tournament < Map
     @clients.each { |c| c.async.server_message(msg) }
   end
 
+  def broadcast_keep_alive
+    @clients.each { |c| c.async.ping }
+  end
+
   def handle_tie(snake1, snake2)
     @clients.each { |c| c.async.broadcast_winner('TIE') }
     transition(:game_over)

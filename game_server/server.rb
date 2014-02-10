@@ -65,42 +65,6 @@ class WebServer < Reel::Server
       socket.close
     end
   end
-
-  class << self
-    def set(option, value, ignore_setter = false, &block)
-      value, not_set = block, false if block
-
-      if not_set
-        raise ArgumentError unless option.respond_to?(:each)
-        option.each { |k,v| set(k, v) }
-        return self
-      end
-
-      if respond_to?("#{option}=") and not ignore_setter
-        return __send__("#{option}=", value)
-      end
-
-      setter = proc { |val| set option, val, true }
-      getter = proc { value }
-
-      case value
-      when Proc
-        getter = value
-      when Symbol, Fixnum, FalseClass, TrueClass, NilClass
-        getter = value.inspect
-      when Hash
-        setter = proc do |val|
-          val = value.merge val if Hash === val
-          set option, val, true
-        end
-      end
-
-      define_singleton("#{option}=", setter) if setter
-      define_singleton(option, getter) if getter
-      define_singleton("#{option}?", "!!#{option}") unless method_defined? "#{option}?"
-      self
-    end
-  end
 end
 
 World.supervise_as :world

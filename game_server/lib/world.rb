@@ -10,6 +10,14 @@ class World
     subscribe('tournament_request', :tournament_request)
     @tournaments = Array.new
     create_new_tournament
+
+    every(20) { keep_alive_open_tournament }
+  end
+
+  def keep_alive_open_tournament
+    if @open_tournament
+      @open_tournament.broadcast_keep_alive
+    end
   end
 
   def tournament_request(topic, actor)

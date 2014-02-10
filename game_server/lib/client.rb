@@ -77,6 +77,10 @@ class Client < Snake
     transmit MultiJson.dump({ 'type' => 'participants', 'value' => clients.map(&:browser_hash) })
   end
 
+  def ping
+    transmit MultiJson.dump({ 'type' => 'ping', 'value' => nil })
+  end
+
   def add_loss
     user = User.find(@id)
     user.losses += 1
