@@ -2,6 +2,8 @@ Snakes::Application.routes.draw do
   root to: "home#index"
   get '/', to: "home#index", as: "new_user_session"
 
+  get 'keep_alive', to: "home#keep_alive"
+
   resources :tournaments, only: [:create]
   
   devise_for :users, :skip => [:registrations, :sessions, :passwords], :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }

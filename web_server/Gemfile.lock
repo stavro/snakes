@@ -90,6 +90,7 @@ GEM
     multi_json (1.8.4)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
+    newrelic_rpm (3.7.1.182)
     oauth2 (0.9.3)
       faraday (>= 0.8, < 0.10)
       jwt (~> 0.1.8)
@@ -180,6 +181,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   mongoid!
+  newrelic_rpm
   omniauth-facebook (~> 1.6.0)
   pry
   pry-remote
