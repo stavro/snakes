@@ -1,7 +1,7 @@
 Snakes
 ==========
 
-Built as a learning experiment.  Multiplayer "Snake" game using Ruby, WebSockets, and HTML canvas.  The game is accessible at [snakes.io](http://snakes.io).
+Built as a learning experiment.  Multiplayer "Snake" game using Ruby, WebSockets, and HTML canvas.
 
 ![image](https://f.cloud.github.com/assets/2391584/2122393/8ffed8a0-920d-11e3-99e1-1c758e6ff5f1.png)
 
