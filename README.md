@@ -14,7 +14,7 @@ Data (user names, scores, images, etc) is persisted through MongoDB, with a sing
 
 
 ## Game Server
-Snakes.io game server is powered by [Reel](https://github.com/celluloid/reel), a "fast, non-blocking evented web server" built atop [Celluloid](https://github.com/celluloid/celluloid), a concurrent object framework.  Celluloid is probably most well-known for powering [Sidekiq](https://github.com/mperham/sidekiq), an amazing background job processor for Ruby.
+Snakes.io game server is powered by [Reel](https://github.com/celluloid/reel), a "fast, non-blocking evented web server" built atop [Celluloid](https://github.com/celluloid/celluloid), a concurrent object framework.  Celluloid is probably most well-known for previously powering [Sidekiq](https://github.com/mperham/sidekiq), an amazing background job processor for Ruby.
 
 The game server runs on JRuby, per Celluloid recommendations.
 
